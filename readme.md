@@ -1,0 +1,2 @@
+- Parse the actual command! > use input
+- Do I need a logging class?
