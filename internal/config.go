@@ -18,7 +18,7 @@ func (config *Config) List() error {
 	for name, alias := range config.aliases {
 		Info.Printf("%s: %s", name, alias.Command)
 		for index := range alias.Subs {
-			alias.Subs[index].print("  >") // recursive
+			alias.Subs[index].print("-") // recursive
 		}
 	}
 	return nil
@@ -43,7 +43,7 @@ func Parse(filename string) (Config, error) {
 	if err != nil {
 		return config, err
 	}
-	// Unmarshal the YAML data into the map
+	// unmarshal the YAML data into the map
 	err = yaml.Unmarshal(data, &config.aliases)
 	return config, err
 }
