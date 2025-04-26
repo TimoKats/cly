@@ -16,7 +16,7 @@ func (config *Config) GetAlias(args []string, aliasIndex int) (*Alias, bool) {
 		if match := find(alias.subAliases(), aliasName); match != -1 {
 			alias = alias.Subs[match]
 		} else {
-			aliasIndex -= 1
+			aliasIndex -= 1 //nolint
 			break
 		}
 	}
