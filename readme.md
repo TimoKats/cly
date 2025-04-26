@@ -1,20 +1,24 @@
 # ⛩️ cly
 
-Use cly to define feature-rich aliases in YAML. For example, you can pass parameters, directories, or define sub commands.  
+Use cly to define feature-rich aliases in YAML. Cly has two commands: `cly run <<command>>` runs an alias and `cly ls/tree` lists the current aliases in your yaml.  
 
-Cly has two commands: `cly run <<command>>` runs an alias and `cly ls/tree` lists the current aliases in your yaml. In your YAML, each object is an alias with potential subcommands, directories, parameters, etc. The yaml below shows this for two example commands (update, dashboard).
+In your YAML, each object is an alias with potential subcommands, directories, and parameters. The yaml below shows this for two example aliases.
 
 ```yaml
 
 update:
-  command: /some/path/script.sh $@  # adds args to your alias. E.g.: cly run update <<x>>
+  command: /some/path/script.sh $@  # adds all args to your alias. E.g.: cly run update <<x,y,z>>
   subcommands:
-  - name: ping  # subcommand, called with: cly run update <<ping>>
+  - name: ping  # subcommand, called with: cly run update ping
     command: /some/other/path/script.sh
 
 dashboard:
   command: streamlit run main.py
   dir: /path/to/python/  # sets a directory to run an alias in
+
+test:
+  command: $0 test.py   # Insert args based on index. E.g.: cly run test <<python3.12>>
+                        # Runs <<python3.12>> main.py
 
 ```
 
