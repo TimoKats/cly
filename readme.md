@@ -4,6 +4,8 @@ Use cly to define feature-rich aliases in YAML. Cly has two commands: `cly run <
 
 In your YAML, each object is an alias with potential subcommands, directories, and parameters. The yaml below shows the configuration options in practice.
 
+&nbsp;
+
 ```yaml
 
 update:
@@ -21,5 +23,7 @@ test:
                        # Runs <<python3.12>> main.py
 
 ```
+  
+&nbsp;
 
 You can install cly using: `go install github.com/TimoKats/cly@latest`. You can add your aliases in your home directory `~/.cly.yaml`. Should work on all operating systems.
