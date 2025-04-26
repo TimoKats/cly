@@ -2,7 +2,7 @@
 
 Use cly to define feature-rich aliases in YAML. Cly has two commands: `cly run <<command>>` runs an alias and `cly ls/tree` lists the current aliases in your yaml.  
 
-In your YAML, each object is an alias with potential subcommands, directories, and parameters. The yaml below shows this for two example aliases.
+In your YAML, each object is an alias with potential subcommands, directories, and parameters. The yaml below shows the configuration options in practice.
 
 ```yaml
 
