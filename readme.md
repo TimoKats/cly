@@ -7,9 +7,9 @@ In your YAML, each object is an alias with potential subcommands, directories, a
 ```yaml
 
 update:
-  command: /some/path/script.sh $@  # adds args to your alias. E.g.: cly run update <<x,y,z>>
+  command: /some/path/script.sh $@  # adds args to alias. E.g.: cly run update <<x,y,z>>
   subcommands:
-  - name: ping  # subcommand, called with: cly run update ping
+  - name: ping  # subcommand for alias, called with: cly run update <<ping>>
     command: /some/other/path/script.sh
 
 dashboard:
