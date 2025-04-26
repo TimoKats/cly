@@ -1,31 +1,45 @@
 package internal
 
 import (
-	"errors"
 	"os"
 
 	"gopkg.in/yaml.v2"
 )
 
-func (config *Config) RunAlias(aliasName string) error {
-	if alias, ok := config.aliases[aliasName]; ok {
-		return alias.run()
+// Returns the alias based on the provided args (bool returned for success)
+func (config *Config) GetAlias(args []string, aliasIndex int) (*Alias, bool) {
+	var aliasName string = args[aliasIndex]
+	alias, ok := config.aliases[aliasName]
+	for aliasIndex < len(args)-1 && ok {
+		aliasIndex += 1
+		aliasName = args[aliasIndex]
+		if match := find(alias.subAliases(), aliasName); match != -1 {
+			alias = alias.Subs[match]
+		} else {
+			aliasIndex -= 1 //nolint
+			break
+		}
 	}
-	return errors.New("alias '" + aliasName + "' not found in config")
+	return alias, alias != nil
 }
 
-func (config *Config) List() error {
+// Lists aliases, in tabular and tree view
+func (config *Config) List(tree bool) error {
 	for name, alias := range config.aliases {
-		Info.Printf("%s: %s", name, alias.Command)
-		for index := range alias.Subs {
-			alias.Subs[index].print("  >") // recursive
+		if tree {
+			for index := range alias.Subs {
+				alias.Subs[index].print("-") // recursive
+			}
+		} else {
+			printTable([]string{name, alias.Command})
 		}
 	}
 	return nil
 }
 
+// Fills in the provided arguments for variables ($@, $0)
 func (config *Config) AddArgs(args []string) {
-	if len(args) <= 3 {
+	if len(args) <= 3 { // no args provided
 		return
 	}
 	for _, alias := range config.aliases {
@@ -37,13 +51,15 @@ func (config *Config) AddArgs(args []string) {
 	}
 }
 
-func Parse(filename string) (Config, error) {
+// Reads the cly yaml file and returns a config object
+func Parse() (Config, error) {
+	var path string = defaultConfigPath()
 	var config Config
-	data, err := os.ReadFile(filename)
+	data, err := os.ReadFile(path)
 	if err != nil {
 		return config, err
 	}
-	// Unmarshal the YAML data into the map
+	// unmarshal the YAML data into the map
 	err = yaml.Unmarshal(data, &config.aliases)
 	return config, err
 }

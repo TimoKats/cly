@@ -1,5 +1,6 @@
 package internal
 
+// Read from YAML. Args is added based on command.
 type Alias struct {
 	Command string `yaml:"command"`
 
@@ -10,6 +11,7 @@ type Alias struct {
 	Args []string
 }
 
+// YAML file is read into this struct. List of aliases.
 type Config struct {
 	aliases map[string]*Alias
 }

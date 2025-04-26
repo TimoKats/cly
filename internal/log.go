@@ -1,5 +1,3 @@
-// logging class, created upon init.
-
 package internal
 
 import (

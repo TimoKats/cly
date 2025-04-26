@@ -2,32 +2,10 @@ package internal
 
 import (
 	"os/exec"
-	"strconv"
 	"strings"
 )
 
-// this makes me dislike golang...
-func popIndex(values []string, delIndex int) []string {
-	var new []string
-	for index, value := range values {
-		if index != delIndex {
-			new = append(new, value)
-		}
-	}
-	return new
-}
-
-// return true if it's a param, and the index of the param
-func getParam(value string) (int, bool) {
-	var isParam bool
-	var index int64
-	if len(value) > 1 && value[0] == '$' {
-		isParam = true
-		index, _ = strconv.ParseInt(value[1:], 10, 0)
-	}
-	return int(index), isParam
-}
-
+// Puts the provided args in placeholders ($@, $0) of the alias.
 func (alias *Alias) formatCommand() (string, []string) {
 	var cmd []string = strings.Fields(alias.Command)
 	for index, value := range cmd {
@@ -46,15 +24,7 @@ func (alias *Alias) formatCommand() (string, []string) {
 	return cmd[0], cmd[1:]
 }
 
-func (alias *Alias) run() error {
-	app, args := alias.formatCommand()
-	cmd := exec.Command(app, args...)
-	cmd.Dir = alias.Dir
-	output, err := cmd.CombinedOutput()
-	Info.Println(string(output))
-	return err
-}
-
+// Adds the command args to the alias object.
 func (alias *Alias) addArgs(args []string, popIndex int) {
 	if len(args) <= popIndex {
 		return
@@ -65,9 +35,29 @@ func (alias *Alias) addArgs(args []string, popIndex int) {
 	}
 }
 
+// Prints the alias (recursive for subcommands).
 func (alias *Alias) print(indent string) {
 	Info.Printf("%s %s: %s", indent, alias.Name, alias.Command)
 	for index := range alias.Subs {
 		alias.Subs[index].print("  " + indent)
 	}
+}
+
+// Returns the names for sub aliases in a string list.
+func (alias *Alias) subAliases() []string {
+	var subAliases []string
+	for _, alias := range alias.Subs {
+		subAliases = append(subAliases, alias.Name)
+	}
+	return subAliases
+}
+
+// Runs the alias and returns command error.
+func (alias *Alias) Run() error {
+	app, args := alias.formatCommand()
+	cmd := exec.Command(app, args...)
+	cmd.Dir = alias.Dir
+	output, err := cmd.CombinedOutput()
+	Info.Println(string(output))
+	return err
 }
