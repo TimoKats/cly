@@ -4,8 +4,6 @@ Use cly to define feature-rich aliases in YAML. Cly has two commands: `cly run <
 
 In your YAML, each object is an alias with potential subcommands, directories, and parameters. The yaml below shows the configuration options in practice.
 
-&nbsp;
-
 ```yaml
 
 update:
