@@ -2,19 +2,19 @@
 
 Use cly to define feature-rich aliases in YAML. For example, you can pass parameters, directories, or define sub commands.  
 
-Cly has two commands: `cly run <<command>>` runs an alias and `cly ls/tree` lists the current aliases in your yaml. For configuration, the YAML below shows most available functionalities.
+Cly has two commands: `cly run <<command>>` runs an alias and `cly ls/tree` lists the current aliases in your yaml. In your YAML, each object (update, dashboard) is an alias with potential subcommands, directories, parameters, etc. The yaml below shows this for two example commands (update, dashboard).
 
 ```yaml
 
 update:
-  command: /some/path/script.sh $@  # adds args to your alias. E.g.: cly run update <<something>>
+  command: /some/path/script.sh $@  # adds args to your alias. E.g.: cly run update <<x>>
   subcommands:
-  - name: ping  # subcommand, called with: cly run update ping
+  - name: ping  # subcommand, called with: cly run update <<ping>>
     command: /some/other/path/script.sh
 
 dashboard:
   command: streamlit run main.py
-  dir: /path/to/python/  # set a directory to run an alias in
+  dir: /path/to/python/  # sets a directory to run an alias in
 
 ```
 
