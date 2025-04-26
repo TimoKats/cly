@@ -1,3 +1,5 @@
+// main control flow of cly. Gets CLI args and calls functions
+
 package main
 
 import (
@@ -9,11 +11,22 @@ import (
 )
 
 func run(config cly.Config, args []string) error {
-	config.AddArgs(args)
 	if len(args) < 3 {
 		return errors.New("no command to run provided")
 	}
-	return config.RunAlias(args[2])
+	config.AddArgs(args)
+	alias, aliasFound := config.GetAlias(args, 2)
+	if aliasFound {
+		return alias.Run()
+	}
+	return errors.New("alias not found in yaml")
+}
+
+func ls(config cly.Config, arg string) error {
+	if arg == "ls" {
+		return config.List(false)
+	}
+	return config.List(true)
 }
 
 func parse(config cly.Config, args []string) error {
@@ -22,8 +35,8 @@ func parse(config cly.Config, args []string) error {
 		return errors.New("no command found")
 	case args[1] == "run":
 		return run(config, args)
-	case args[1] == "ls":
-		return config.List()
+	case args[1] == "ls", args[1] == "tree":
+		return ls(config, args[1])
 	default:
 		return errors.New("command '" + args[1] + "' not valid")
 	}

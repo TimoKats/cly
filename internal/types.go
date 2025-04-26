@@ -1,3 +1,7 @@
+// Types of cly. A config refers to the yaml that's loaded (and consists of
+// aliases). The alias attribute Args is not derived from YAML but instead
+// filled in later.
+
 package internal
 
 type Alias struct {
