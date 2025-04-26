@@ -7,7 +7,7 @@ In your YAML, each object is an alias with potential subcommands, directories, a
 ```yaml
 
 update:
-  command: /some/path/script.sh $@  # adds all args to your alias. E.g.: cly run update <<x,y,z>>
+  command: /some/path/script.sh $@  # adds args to your alias. E.g.: cly run update <<x,y,z>>
   subcommands:
   - name: ping  # subcommand, called with: cly run update ping
     command: /some/other/path/script.sh
@@ -17,8 +17,8 @@ dashboard:
   dir: /path/to/python/  # sets a directory to run an alias in
 
 test:
-  command: $0 test.py   # Insert args based on index. E.g.: cly run test <<python3.12>>
-                        # Runs <<python3.12>> main.py
+  command: $0 test.py  # Insert args based on index. E.g.: cly run test <<python3.12>>
+                       # Runs <<python3.12>> main.py
 
 ```
 
