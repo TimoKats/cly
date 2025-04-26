@@ -43,12 +43,13 @@ func parse(config cly.Config, args []string) error {
 }
 
 func main() {
-	config, err := cly.Parse("yaml/example.yaml")
-	if err != nil {
+	var config cly.Config
+	var err error
+	if config, err = cly.Parse(); err != nil {
 		cly.Error.Println(err)
+		return
 	}
-	err = parse(config, os.Args)
-	if err != nil {
+	if err = parse(config, os.Args); err != nil {
 		cly.Error.Println(err)
 	}
 }

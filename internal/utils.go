@@ -1,9 +1,8 @@
-// various util functions.
-
 package internal
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 )
 
@@ -50,4 +49,10 @@ func printTable(items []string) {
 		fmt.Printf("%s", paddedStr)
 	}
 	fmt.Printf("\n")
+}
+
+// returns default config path (~/.cly)
+func defaultConfigPath() string {
+	dirname, _ := os.UserHomeDir()
+	return dirname + "/.cly.yaml"
 }

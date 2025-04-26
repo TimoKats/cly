@@ -1,6 +1,3 @@
-// config (i.e. the yaml with your aliases) related functions. Often calls
-// modules from alias and is called by the main control flow.
-
 package internal
 
 import (
@@ -9,6 +6,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+// Returns the alias based on the provided args (bool returned for success)
 func (config *Config) GetAlias(args []string, aliasIndex int) (*Alias, bool) {
 	var aliasName string = args[aliasIndex]
 	alias, ok := config.aliases[aliasName]
@@ -25,6 +23,7 @@ func (config *Config) GetAlias(args []string, aliasIndex int) (*Alias, bool) {
 	return alias, alias != nil
 }
 
+// Lists aliases, in tabular and tree view
 func (config *Config) List(tree bool) error {
 	for name, alias := range config.aliases {
 		if tree {
@@ -38,6 +37,7 @@ func (config *Config) List(tree bool) error {
 	return nil
 }
 
+// Fills in the provided arguments for variables ($@, $0)
 func (config *Config) AddArgs(args []string) {
 	if len(args) <= 3 { // no args provided
 		return
@@ -51,9 +51,11 @@ func (config *Config) AddArgs(args []string) {
 	}
 }
 
-func Parse(filename string) (Config, error) {
+// Reads the cly yaml file and returns a config object
+func Parse() (Config, error) {
+	var path string = defaultConfigPath()
 	var config Config
-	data, err := os.ReadFile(filename)
+	data, err := os.ReadFile(path)
 	if err != nil {
 		return config, err
 	}
