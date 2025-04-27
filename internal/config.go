@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"errors"
 	"os"
 
 	"gopkg.in/yaml.v2"
@@ -23,14 +24,18 @@ func (config *Config) GetAlias(args []string, aliasIndex int) (*Alias, bool) {
 	return alias, alias != nil
 }
 
-// Lists aliases, in tabular and tree view
-func (config *Config) List(tree bool) error {
-	for name, alias := range config.aliases {
-		if tree {
-			for index := range alias.Subs {
-				alias.Subs[index].print("-") // recursive
+// Lists aliases, args can contain alias to list subcommands
+func (config *Config) List(args []string) error {
+	if len(args) > 2 {
+		if alias, ok := config.aliases[args[2]]; ok {
+			for _, subAlias := range alias.Subs {
+				printTable([]string{subAlias.Name, subAlias.Command})
 			}
-		} else {
+			return nil
+		}
+		return errors.New("alias '" + args[2] + "' not found")
+	} else {
+		for name, alias := range config.aliases {
 			printTable([]string{name, alias.Command})
 		}
 	}

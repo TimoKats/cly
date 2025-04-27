@@ -35,14 +35,6 @@ func (alias *Alias) addArgs(args []string, popIndex int) {
 	}
 }
 
-// Prints the alias (recursive for subcommands).
-func (alias *Alias) print(indent string) {
-	Info.Printf("%s %s: %s", indent, alias.Name, alias.Command)
-	for index := range alias.Subs {
-		alias.Subs[index].print("  " + indent)
-	}
-}
-
 // Returns the names for sub aliases in a string list.
 func (alias *Alias) subAliases() []string {
 	var subAliases []string

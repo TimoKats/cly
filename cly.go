@@ -22,21 +22,14 @@ func run(config cly.Config, args []string) error {
 	return errors.New("alias not found in yaml")
 }
 
-func ls(config cly.Config, arg string) error {
-	if arg == "ls" {
-		return config.List(false)
-	}
-	return config.List(true)
-}
-
 func parse(config cly.Config, args []string) error {
 	switch {
 	case len(args) == 1:
 		return errors.New("no command found")
 	case args[1] == "run":
 		return run(config, args)
-	case args[1] == "ls", args[1] == "tree":
-		return ls(config, args[1])
+	case args[1] == "ls":
+		return config.List(args)
 	default:
 		return errors.New("command '" + args[1] + "' not valid")
 	}
