@@ -26,7 +26,7 @@ func (config *Config) GetAlias(args []string, aliasIndex int) (*Alias, bool) {
 
 // Lists aliases, args can contain alias to list subcommands
 func (config *Config) List(args []string) error {
-	if len(args) > 2 {
+	if len(args) > 2 { // NOTE: keep this?
 		if alias, ok := config.aliases[args[2]]; ok {
 			for _, subAlias := range alias.Subs {
 				printTable([]string{subAlias.Name, subAlias.Command})
@@ -34,10 +34,9 @@ func (config *Config) List(args []string) error {
 			return nil
 		}
 		return errors.New("alias '" + args[2] + "' not found")
-	} else {
-		for name, alias := range config.aliases {
-			printTable([]string{name, alias.Command})
-		}
+	}
+	for name, alias := range config.aliases {
+		printTable([]string{name, alias.Command})
 	}
 	return nil
 }
@@ -58,7 +57,7 @@ func (config *Config) AddArgs(args []string) {
 
 // Reads the cly yaml file and returns a config object
 func Parse() (Config, error) {
-	var path string = defaultConfigPath()
+	var path string = configPath()
 	var config Config
 	data, err := os.ReadFile(path)
 	if err != nil {

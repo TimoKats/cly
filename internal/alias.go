@@ -6,8 +6,9 @@ import (
 )
 
 // Puts the provided args in placeholders ($@, $0) of the alias.
-func (alias *Alias) formatCommand() (string, []string) {
-	var cmd []string = strings.Fields(alias.Command)
+// Update: command is provided as arg, because I want to reuse it for lists.
+func (alias *Alias) formatCommand(command string) (string, []string) {
+	var cmd []string = strings.Fields(command)
 	for index, value := range cmd {
 		if value == "$@" {
 			cmd = popIndex(cmd, index)
@@ -46,10 +47,20 @@ func (alias *Alias) subAliases() []string {
 
 // Runs the alias and returns command error.
 func (alias *Alias) Run() error {
-	app, args := alias.formatCommand()
-	cmd := exec.Command(app, args...)
-	cmd.Dir = alias.Dir
-	output, err := cmd.CombinedOutput()
-	Info.Println(string(output))
+	var output []byte
+	var err error
+	for _, command := range append(alias.Commands, alias.Command) {
+		// skip empty commands (breaks formatting)
+		if len(command) == 0 {
+			continue
+		}
+		// setup
+		app, args := alias.formatCommand(command)
+		cmd := exec.Command(app, args...)
+		cmd.Dir = alias.Dir
+		// exec
+		output, err = cmd.CombinedOutput()
+		Info.Println(string(output))
+	}
 	return err
 }

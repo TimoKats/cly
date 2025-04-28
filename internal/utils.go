@@ -51,8 +51,12 @@ func printTable(items []string) {
 	fmt.Printf("\n")
 }
 
-// returns default config path (~/.cly)
-func defaultConfigPath() string {
+// returns default config path (~/.cly) or value in CLYPATH
+func configPath() string {
+	customPath := os.Getenv("CLYPATH")
 	dirname, _ := os.UserHomeDir()
+	if len(customPath) > 0 {
+		return customPath
+	}
 	return dirname + "/.cly.yaml"
 }
