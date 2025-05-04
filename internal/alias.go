@@ -82,7 +82,7 @@ func (alias *Alias) ConcurrentRun() error {
 	var workers = len(commands) - 1
 	for i := 0; i < workers; i++ {
 		wg.Add(1)
-		go alias.exec(commands[i], &wg)
+		go alias.exec(commands[i], &wg) //nolint
 	}
 	wg.Wait()
 	Info.Printf("Finished %d runs concurrently.", workers)
