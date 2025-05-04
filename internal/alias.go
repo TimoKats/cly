@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"os"
 	"os/exec"
 	"strings"
 	"sync"
@@ -24,6 +25,15 @@ func (alias *Alias) formatCommand(command string) (string, []string) {
 		}
 	}
 	return cmd[0], cmd[1:]
+}
+
+// Takes envs from yaml and creates a .env file (kinda) for exec library.
+func (alias *Alias) formatEnv() []string {
+	var envs []string
+	for _, env := range alias.Envs {
+		envs = append(envs, env.Name+"="+env.Value)
+	}
+	return envs
 }
 
 // Adds the command args to the alias object.
@@ -59,6 +69,7 @@ func (alias *Alias) exec(command string, wg *sync.WaitGroup) error {
 	// setup
 	app, args := alias.formatCommand(command)
 	cmd := exec.Command(app, args...)
+	cmd.Env = append(os.Environ(), alias.formatEnv()...)
 	cmd.Dir = alias.Dir
 	// exec
 	output, err := cmd.CombinedOutput()
