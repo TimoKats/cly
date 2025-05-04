@@ -6,8 +6,6 @@
 
 Cly allows you to create feature rich aliases in YAML. The example below is an example YAML showcasing 5 aliases with different configuration options. You can add this file in `~/.cly.yaml` or somewhere custom by setting the env `CLYPATH`.  
 
-Cly has two commands: `run <<command>>` and `ls`.  You can install cly using: `go install github.com/TimoKats/cly@latest`.
-
 ```yaml
 
 update:
@@ -39,7 +37,7 @@ hi:
 ```
   
 ## Docs
-This table shows an overview of the fields that can be supplied in your YAML alias objects.
+Cly has two commands: `run <<command>>` and `ls`. You can install cly using: `go install github.com/TimoKats/cly@latest`. The table shows an overview of the fields that can be supplied in your YAML alias objects to configure cly.
 
 <table>
   <thead>
@@ -78,6 +76,6 @@ This table shows an overview of the fields that can be supplied in your YAML ali
 
 &nbsp;
 
-You can pass parameters to your aliases when invoking them. For this, we use bash syntax. Adding `$@` adds all parameters to an alias. `$0...n` inserts an alias based on the index. The example above has some examples for this.
+Finally, you can pass parameters to your aliases when invoking them. For this, we use bash syntax. Adding `$@` adds all parameters to an alias. `$0...n` inserts an alias based on the index. The example above has some examples for this.
 
 
