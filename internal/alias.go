@@ -3,11 +3,13 @@ package internal
 import (
 	"os/exec"
 	"strings"
+	"sync"
 )
 
 // Puts the provided args in placeholders ($@, $0) of the alias.
-func (alias *Alias) formatCommand() (string, []string) {
-	var cmd []string = strings.Fields(alias.Command)
+// Update: command is provided as arg, because I want to reuse it for lists.
+func (alias *Alias) formatCommand(command string) (string, []string) {
+	var cmd []string = strings.Fields(command)
 	for index, value := range cmd {
 		if value == "$@" {
 			cmd = popIndex(cmd, index)
@@ -44,12 +46,45 @@ func (alias *Alias) subAliases() []string {
 	return subAliases
 }
 
-// Runs the alias and returns command error.
-func (alias *Alias) Run() error {
-	app, args := alias.formatCommand()
+// executes a command, logs the result, and returns error.
+func (alias *Alias) exec(command string, wg *sync.WaitGroup) error {
+	// skip empty commands (breaks formatting)
+	if len(command) == 0 {
+		return nil
+	}
+	// only for concurrent runs
+	if wg != nil {
+		defer wg.Done()
+	}
+	// setup
+	app, args := alias.formatCommand(command)
 	cmd := exec.Command(app, args...)
 	cmd.Dir = alias.Dir
+	// exec
 	output, err := cmd.CombinedOutput()
 	Info.Println(string(output))
 	return err
+}
+
+// Runs the alias in sequential order.
+func (alias *Alias) SequentialRun() error {
+	var err error
+	for _, command := range append(alias.Commands, alias.Command) {
+		err = alias.exec(command, nil)
+	}
+	return err
+}
+
+// Runs the alias commands concurrently. TODO: use errors?
+func (alias *Alias) ConcurrentRun() error {
+	var wg sync.WaitGroup
+	var commands []string = append(alias.Commands, alias.Command)
+	var workers = len(commands) - 1
+	for i := 0; i < workers; i++ {
+		wg.Add(1)
+		go alias.exec(commands[i], &wg) //nolint
+	}
+	wg.Wait()
+	Info.Printf("Finished %d runs concurrently.", workers)
+	return nil
 }

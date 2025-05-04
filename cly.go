@@ -17,7 +17,10 @@ func run(config cly.Config, args []string) error {
 	config.AddArgs(args)
 	alias, aliasFound := config.GetAlias(args, 2)
 	if aliasFound {
-		return alias.Run()
+		if alias.Concurrent {
+			return alias.ConcurrentRun()
+		}
+		return alias.SequentialRun()
 	}
 	return errors.New("alias not found in yaml")
 }
