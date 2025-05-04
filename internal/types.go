@@ -1,5 +1,11 @@
 package internal
 
+// Envs can be passed to aliases through yaml
+type Env struct {
+	Name  string
+	Value string
+}
+
 // Read from YAML. Args is added based on command.
 type Alias struct {
 	// at least one needs to be set
@@ -10,6 +16,7 @@ type Alias struct {
 	Name       string   `yaml:"name"`
 	Dir        string   `yaml:"dir"`
 	Concurrent bool     `yaml:"concurrent"`
+	Envs       []Env    `yaml:"envs"`
 	Args       []string
 }
 
