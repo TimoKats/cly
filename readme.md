@@ -36,8 +36,6 @@ hi:
     value: us-east-1
   - name: CITY
     value: Rotterdam
-
-
 ```
   
 ## Docs
