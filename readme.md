@@ -24,8 +24,8 @@ python:               # Insert args based on index. E.g.: cly run test <python3.
 create-file:
   concurrent: true  # Runs the commands below concurrently
   commands:
-    - touch $0
-    - echo hi > $0
+  - touch $0
+  - echo hi > $0
 
 hi:
   command: python3 test/env.py
